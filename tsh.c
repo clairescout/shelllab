@@ -2,6 +2,9 @@
  * tsh - A tiny shell program with job control
  * 
  * Claire Gammon cgammon
+ *
+ * QUESTIONS
+ * do i check for builtin commands before forking?? if not, how do i exit from child and parent?
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,7 +41,7 @@
 /* Global variables */
 extern char **environ;      /* defined in libc */
 char prompt[] = "tsh> ";    /* command line prompt (DO NOT CHANGE) */
-int verbose = 0;            /* if true, print additional output */
+int verbose = 1;            /* if true, print additional output */
 int nextjid = 1;            /* next job ID to allocate */
 char sbuf[MAXLINE];         /* for composing sprintf messages */
 
@@ -101,18 +104,18 @@ int main(int argc, char **argv)
     /* Parse the command line */
     while ((c = getopt(argc, argv, "hvp")) != EOF) {
         switch (c) {
-        case 'h':             /* print help message */
-            usage();
-	    break;
-        case 'v':             /* emit additional diagnostic info */
-            verbose = 1;
-	    break;
-        case 'p':             /* don't print a prompt */
-            emit_prompt = 0;  /* handy for automatic testing */
-	    break;
-	default:
-            usage();
-	}
+            case 'h':             /* print help message */
+                usage();
+                break;
+            case 'v':             /* emit additional diagnostic info */
+                verbose = 1;
+                break;
+            case 'p':             /* don't print a prompt */
+                emit_prompt = 0;  /* handy for automatic testing */
+                break;
+            default:
+                usage();
+        }
     }
 
     /* Install the signal handlers */
@@ -163,8 +166,48 @@ int main(int argc, char **argv)
  * background children don't receive SIGINT (SIGTSTP) from the kernel
  * when we type ctrl-c (ctrl-z) at the keyboard.  
 */
-void eval(char *cmdline) 
+void eval(char *cmdline)
 {
+    char *argv[MAXARGS];
+    char buf[MAXLINE];
+    int bg;
+    pid_t pid;
+
+    strcpy(buf, cmdline);
+    bg = parseline( buf, argv );
+    if (argv[0] == NULL) {
+        return;
+    }
+    int is_builtin = builtin_cmd(argv);
+
+    int child_pid = fork();
+    // TODO: mask things
+    if ( child_pid == 0 ) {
+        // TODO: set the group id to match the pid
+        if(!is_builtin) {
+            if (execve(argv[0], argv, environ) < 0) {
+                printf("%s: Command not found. \n", argv[0]);
+                exit(0);
+            }
+        }
+    } else {
+        // TODO: mask things
+
+        // parent
+        // keep track of kids, then wait
+        pid = getpid();
+        nextjid++;
+        if ( !bg ) {
+            addjob(jobs, pid, FG, cmdline);
+        } else {
+            addjob(jobs, pid, BG, cmdline);
+        }
+
+        if( !bg ) {
+            waitfg(pid);
+        }
+    }
+
     return;
 }
 
@@ -186,51 +229,73 @@ int parseline(const char *cmdline, char **argv)
     strcpy(buf, cmdline);
     buf[strlen(buf)-1] = ' ';  /* replace trailing '\n' with space */
     while (*buf && (*buf == ' ')) /* ignore leading spaces */
-	buf++;
+	    buf++;
 
     /* Build the argv list */
     argc = 0;
     if (*buf == '\'') {
-	buf++;
-	delim = strchr(buf, '\'');
+        buf++;
+        delim = strchr(buf, '\'');
     }
     else {
-	delim = strchr(buf, ' ');
+	    delim = strchr(buf, ' ');
     }
 
     while (delim) {
-	argv[argc++] = buf;
-	*delim = '\0';
-	buf = delim + 1;
-	while (*buf && (*buf == ' ')) /* ignore spaces */
-	       buf++;
+        argv[argc++] = buf;
+        *delim = '\0';
+        buf = delim + 1;
+        while (*buf && (*buf == ' ')) /* ignore spaces */
+               buf++;
 
-	if (*buf == '\'') {
-	    buf++;
-	    delim = strchr(buf, '\'');
-	}
-	else {
-	    delim = strchr(buf, ' ');
-	}
+        if (*buf == '\'') {
+            buf++;
+            delim = strchr(buf, '\'');
+        }
+        else {
+            delim = strchr(buf, ' ');
+        }
     }
     argv[argc] = NULL;
     
     if (argc == 0)  /* ignore blank line */
-	return 1;
+	    return 1;
 
     /* should the job run in the background? */
     if ((bg = (*argv[argc-1] == '&')) != 0) {
-	argv[--argc] = NULL;
+	    argv[--argc] = NULL;
     }
     return bg;
 }
 
 /* 
- * builtin_cmd - If the user has typed a built-in command then execute
+ * builtin_cmd - If the user has typed a built-in command (quit, jobs, bg or fg) then execute
  *    it immediately.  
  */
-int builtin_cmd(char **argv) 
+int builtin_cmd(char **argv)
 {
+    char *quit_cmd = "quit";
+    char *jobs_cmd = "jobs";
+    char *bg_cmd = "bg";
+    char *fg_cmd = "fg";
+
+    if( strcmp(quit_cmd, argv[0]) == 0) {
+        printf("Do quit\n");
+        exit(0);
+    } else if( strcmp(jobs_cmd, argv[0]) == 0) {
+        printf("do jobs\n");
+        listjobs(jobs); // TODO: make it so it only lists bg jobs
+        return 1;
+    } else if( strcmp(bg_cmd, argv[0]) == 0) {
+        printf("do bg\n");
+        do_bgfg(argv);
+        return 1;
+    } else if( strcmp(fg_cmd, argv[0]) == 0) {
+        printf("do fg\n");
+        do_bgfg(argv);
+        return 1;
+    }
+
     return 0;     /* not a builtin command */
 }
 
@@ -261,8 +326,35 @@ void waitfg(pid_t pid)
  *     available zombie children, but doesn't wait for any other
  *     currently running children to terminate.  
  */
-void sigchld_handler(int sig) 
+void sigchld_handler(int sig)
 {
+    int status;
+    pid_t pid;
+    // TODO: WHAT KIND OF WAIT DO I USE HERE
+    // TODO: MASK
+    while( (pid = waitpid(-1, &status, WNOHANG|WUNTRACED)) > 0) {
+        // check and handle all three cases
+        if (WIFSTOPPED(status)) {
+            // got signal from sigtstp handler
+            // TODO: update job table
+
+        } else if (WIFSIGNALED(status)) {
+            // continue
+            // TODO: update job table: change state to continued
+            if (WTERMSIG(status)) {
+                // TODO: print terminated
+                // TODO: delete it
+            } else {
+                //TODO: update table
+            }
+        } else if (WIFEXITED(status)) {
+            //all deletes happen here and only here
+            // TODO: delete job
+        } else {
+            // TODO: ERROR.
+        }
+
+    }
     return;
 }
 
@@ -273,7 +365,11 @@ void sigchld_handler(int sig)
  */
 void sigint_handler(int sig) 
 {
-    return;
+    printf("you made it to the sigint handler!\n");
+    pid_t pid = fgpid(jobs);
+    printf("the pid: %d \n", pid);
+    kill(-pid, SIGINT);
+    exit(0); // TODO: take this out when it's working.
 }
 
 /*
