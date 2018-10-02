@@ -350,6 +350,7 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
+    printf("I'm in wait");
     while(fgpid(jobs) == pid){
         sleep(1);
     }
