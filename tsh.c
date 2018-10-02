@@ -5,6 +5,7 @@
  *
  * QUESTIONS
  * do i check for builtin commands before forking?? if not, how do i exit from child and parent?
+ * i don't understand
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -81,6 +82,7 @@ struct job_t *getjobpid(struct job_t *jobs, pid_t pid);
 struct job_t *getjobjid(struct job_t *jobs, int jid); 
 int pid2jid(pid_t pid); 
 void listjobs(struct job_t *jobs);
+void listbgjobs(struct job_t *jobs);
 
 void usage(void);
 void unix_error(char *msg);
@@ -183,7 +185,7 @@ void eval(char *cmdline)
     int child_pid = fork();
     // TODO: mask things
     if ( child_pid == 0 ) {
-        // TODO: set the group id to match the pid
+        setpgid(0, 0);
         if(!is_builtin) {
             if (execve(argv[0], argv, environ) < 0) {
                 printf("%s: Command not found. \n", argv[0]);
@@ -192,11 +194,7 @@ void eval(char *cmdline)
         }
     } else {
         // TODO: mask things
-
-        // parent
-        // keep track of kids, then wait
         pid = getpid();
-        nextjid++;
         if ( !bg ) {
             addjob(jobs, pid, FG, cmdline);
         } else {
@@ -284,14 +282,11 @@ int builtin_cmd(char **argv)
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
         printf("do jobs\n");
-        listjobs(jobs); // TODO: make it so it only lists bg jobs
+        // listjobs(jobs); // TODO: make it so it only lists bg jobs
+        listbgjobs(jobs);
         return 1;
-    } else if( strcmp(bg_cmd, argv[0]) == 0) {
-        printf("do bg\n");
-        do_bgfg(argv);
-        return 1;
-    } else if( strcmp(fg_cmd, argv[0]) == 0) {
-        printf("do fg\n");
+    } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
+        printf("do bg or fg\n");
         do_bgfg(argv);
         return 1;
     }
@@ -304,6 +299,10 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
+    // TODO: first check if there is even another arg that follows bg/fg.
+    // then check if it's an % sign.
+    // if it is, then get the jpid, if not, the pid. (else error?)
+    // then set a sig continue, set the state to fg or bg.
     return;
 }
 
@@ -312,7 +311,9 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
-    return;
+    while(fgpid(jobs) == pid){
+        sleep(1);
+    }
 }
 
 /*****************
@@ -330,28 +331,31 @@ void sigchld_handler(int sig)
 {
     int status;
     pid_t pid;
-    // TODO: WHAT KIND OF WAIT DO I USE HERE
     // TODO: MASK
     while( (pid = waitpid(-1, &status, WNOHANG|WUNTRACED)) > 0) {
         // check and handle all three cases
         if (WIFSTOPPED(status)) {
             // got signal from sigtstp handler
-            // TODO: update job table
 
+            //update table - change state to stopped.
+            job_t job = getjobpid(jobs, pid);
+            job->state = ST;
         } else if (WIFSIGNALED(status)) {
             // continue
-            // TODO: update job table: change state to continued
+            // update job table - change state to continued
+            job_t job = getjobpid(jobs, pid);
+            job->state = BG; // TODO: Is this right?
             if (WTERMSIG(status)) {
                 // TODO: print terminated
-                // TODO: delete it
+                deletejob(jobs, pid); // TODO: we say below that all deletes only happen there, so should it not be deleted here?
             } else {
-                //TODO: update table
+                //TODO: update table to be what?
             }
         } else if (WIFEXITED(status)) {
             //all deletes happen here and only here
-            // TODO: delete job
+            deletejob(jobs, pid);
         } else {
-            // TODO: ERROR.
+            printf("ERROR HERE"); //TODO: how should I handle this error?
         }
 
     }
@@ -370,6 +374,7 @@ void sigint_handler(int sig)
     printf("the pid: %d \n", pid);
     kill(-pid, SIGINT);
     exit(0); // TODO: take this out when it's working.
+    return;
 }
 
 /*
@@ -379,6 +384,9 @@ void sigint_handler(int sig)
  */
 void sigtstp_handler(int sig) 
 {
+    pid_t pid = fgpid(jobs);
+    kill(-pid, SIGTSTP);
+    // TODO: make sure this works
     return;
 }
 
@@ -516,24 +524,38 @@ void listjobs(struct job_t *jobs)
     int i;
     
     for (i = 0; i < MAXJOBS; i++) {
-	if (jobs[i].pid != 0) {
-	    printf("[%d] (%d) ", jobs[i].jid, jobs[i].pid);
-	    switch (jobs[i].state) {
-		case BG: 
-		    printf("Running ");
-		    break;
-		case FG: 
-		    printf("Foreground ");
-		    break;
-		case ST: 
-		    printf("Stopped ");
-		    break;
-	    default:
-		    printf("listjobs: Internal error: job[%d].state=%d ", 
-			   i, jobs[i].state);
-	    }
-	    printf("%s", jobs[i].cmdline);
-	}
+        if (jobs[i].pid != 0) {
+            printf("[%d] (%d) ", jobs[i].jid, jobs[i].pid);
+            switch (jobs[i].state) {
+                case BG:
+                    printf("Running ");
+                    break;
+                case FG:
+                    printf("Foreground ");
+                    break;
+                case ST:
+                    printf("Stopped ");
+                    break;
+                default:
+                    printf("listjobs: Internal error: job[%d].state=%d ",
+                       i, jobs[i].state);
+            }
+            printf("%s", jobs[i].cmdline);
+        }
+    }
+}
+
+void listbgjobs(struct job_t *jobs) {
+    // TODO: check if this works correctly
+    int i;
+
+    for (i = 0; i < MAXJOBS; i++) {
+        if (jobs[i].pid != 0) {
+            if ( jobs[i].state == BG ) {
+                printf("[%d] (%d) ", jobs[i].jid, jobs[i].pid);
+                printf("%s", jobs[i].cmdline);
+            }
+        }
     }
 }
 /******************************
