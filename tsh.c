@@ -202,6 +202,8 @@ void eval(char *cmdline)
                 printf("%s: Command not found. \n", argv[0]);
                 exit(0);
             }
+        } else {
+            printf("Was a builtin");
         }
     } else {
         pid = getpid();
@@ -303,6 +305,7 @@ int builtin_cmd(char **argv)
         listjobs(jobs);
         printf("list bg jobs");
         listbgjobs(jobs);
+        printf("I will return");
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
         printf("do bg or fg\n");
