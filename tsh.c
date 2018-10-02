@@ -203,7 +203,7 @@ void eval(char *cmdline)
                 exit(0);
             }
         } else {
-            printf("Was a builtin");
+            printf("Was a builtin\n");
         }
     } else {
         pid = getpid();
@@ -225,6 +225,7 @@ void eval(char *cmdline)
         }
     }
 
+    printf("about to return\n");
     return;
 }
 
@@ -301,11 +302,10 @@ int builtin_cmd(char **argv)
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
         // printf("do jobs\n");
-        printf("list all jobs");
+        printf("list all jobs\n");
         listjobs(jobs);
-        printf("list bg jobs");
+        printf("list bg jobs\n");
         listbgjobs(jobs);
-        printf("I will return");
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
         printf("do bg or fg\n");
