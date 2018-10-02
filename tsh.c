@@ -16,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
+#include <signal.h>
 
 /* Misc manifest constants */
 #define MAXLINE    1024   /* max line size */
@@ -170,6 +171,7 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
+    sigset_t mask, prev_mask;
     char *argv[MAXARGS];
     char buf[MAXLINE];
     int bg;
@@ -182,10 +184,18 @@ void eval(char *cmdline)
     }
     int is_builtin = builtin_cmd(argv);
 
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGCHLD);
+    // Block SIGCHLD and save previous blocked set
+    sigprocmask(SIG_BLOCK, &mask, &prev_mask);
     int child_pid = fork();
-    // TODO: mask things
     if ( child_pid == 0 ) {
+        // Restore previous blocked set, unblocking SIGCHLD
+        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
+
+        // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
         setpgid(0, 0);
+
         if(!is_builtin) {
             if (execve(argv[0], argv, environ) < 0) {
                 printf("%s: Command not found. \n", argv[0]);
@@ -193,13 +203,19 @@ void eval(char *cmdline)
             }
         }
     } else {
-        // TODO: mask things
         pid = getpid();
+
+        // Block SIGCHLD and save previous blocked set
+        //TODO: Do I need to do this again?
+        sigemptyset(&mask);
+        sigaddset(&mask, SIGCHLD);
+        sigprocmask(SIG_BLOCK, &mask, &prev_mask);
         if ( !bg ) {
             addjob(jobs, pid, FG, cmdline);
         } else {
             addjob(jobs, pid, BG, cmdline);
         }
+        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
 
         if( !bg ) {
             waitfg(pid);
@@ -282,7 +298,7 @@ int builtin_cmd(char **argv)
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
         printf("do jobs\n");
-        // listjobs(jobs); // TODO: make it so it only lists bg jobs
+        // listjobs(jobs);
         listbgjobs(jobs);
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
@@ -329,6 +345,7 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig)
 {
+    sigset_t mask, prev_mask;
     int status;
     pid_t pid;
     // TODO: MASK
@@ -338,21 +355,23 @@ void sigchld_handler(int sig)
             // got signal from sigtstp handler
 
             //update table - change state to stopped.
-            job_t job = getjobpid(jobs, pid);
+            struct job_t *job = getjobpid(jobs, pid);
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
-            // continue
+            // returns true if the child process termianted because of a signal that was not caught
             // update job table - change state to continued
-            job_t job = getjobpid(jobs, pid);
+            struct job_t *job = getjobpid(jobs, pid);
             job->state = BG; // TODO: Is this right?
             if (WTERMSIG(status)) {
+                // returns the number of the signal that caused the child process to terminate
                 // TODO: print terminated
                 deletejob(jobs, pid); // TODO: we say below that all deletes only happen there, so should it not be deleted here?
             } else {
                 //TODO: update table to be what?
             }
         } else if (WIFEXITED(status)) {
-            //all deletes happen here and only here
+            // returns true if the child terminated normally, via a call to exit or a return
+            // all deletes happen here and only here
             deletejob(jobs, pid);
         } else {
             printf("ERROR HERE"); //TODO: how should I handle this error?
