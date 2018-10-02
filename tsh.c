@@ -5,7 +5,8 @@
  *
  * QUESTIONS
  * do i check for builtin commands before forking?? if not, how do i exit from child and parent?
- * i don't understand
+ * what do i need to mask in sigchld handler?
+ * why does my sigint/sigtstp handler never stop??
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -297,8 +298,10 @@ int builtin_cmd(char **argv)
         printf("Do quit\n");
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
-        printf("do jobs\n");
-        // listjobs(jobs);
+        // printf("do jobs\n");
+        printf("list all jobs");
+        listjobs(jobs);
+        printf("list bg jobs");
         listbgjobs(jobs);
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
@@ -316,9 +319,29 @@ int builtin_cmd(char **argv)
 void do_bgfg(char **argv) 
 {
     // TODO: first check if there is even another arg that follows bg/fg.
-    // then check if it's an % sign.
-    // if it is, then get the jpid, if not, the pid. (else error?)
-    // then set a sig continue, set the state to fg or bg.
+    if (argv[1]) { // TODO: double check that this is correct.
+        struct job_t *job;
+        if(argv[1][0] == '%'){
+            // get the job based on jpid
+            // printf(argv[1]++); // FOR TESTING LATER
+            job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this
+        } else {
+            job = getjobpid(jobs, atoi(argv[1]));
+        }
+        // TODO: where do i need to mask here?
+        pid_t pid = job->pid;
+
+        // seng sigcontinue
+        kill(-pid, SIGCONT);
+        // TODO: how do i determine if its running in fg or bg?
+        // update table to show correct state
+        // TODO: do i mask this?
+        if (strcmp(argv[0], "bg") == 0) {
+            job->state = BG;
+        } else {
+            job->state = FG;
+        }
+    }
     return;
 }
 
@@ -351,6 +374,12 @@ void sigchld_handler(int sig)
     // TODO: MASK
     while( (pid = waitpid(-1, &status, WNOHANG|WUNTRACED)) > 0) {
         // check and handle all three cases
+
+        // TODO: get this mask to it's actually correct
+        sigemptyset(&mask);
+        sigaddset(&mask, SIGCHLD);
+        // Block SIGCHLD and save previous blocked set
+        sigprocmask(SIG_BLOCK, &mask, &prev_mask);
         if (WIFSTOPPED(status)) {
             // got signal from sigtstp handler
 
@@ -358,7 +387,7 @@ void sigchld_handler(int sig)
             struct job_t *job = getjobpid(jobs, pid);
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
-            // returns true if the child process termianted because of a signal that was not caught
+            // returns true if the child process terminated because of a signal that was not caught
             // update job table - change state to continued
             struct job_t *job = getjobpid(jobs, pid);
             job->state = BG; // TODO: Is this right?
@@ -376,6 +405,7 @@ void sigchld_handler(int sig)
         } else {
             printf("ERROR HERE"); //TODO: how should I handle this error?
         }
+        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
 
     }
     return;
@@ -388,10 +418,14 @@ void sigchld_handler(int sig)
  */
 void sigint_handler(int sig) 
 {
-    printf("you made it to the sigint handler!\n");
+    listjobs(jobs);
     pid_t pid = fgpid(jobs);
-    printf("the pid: %d \n", pid);
-    kill(-pid, SIGINT);
+    printf("sigint handler. the pid: %d \n", pid);
+    if (pid > 0) {
+        kill(-pid, SIGINT); //TODO: add error handling?
+    } else {
+        printf("There is no fg process\n");
+    }
     exit(0); // TODO: take this out when it's working.
     return;
 }
@@ -404,8 +438,14 @@ void sigint_handler(int sig)
 void sigtstp_handler(int sig) 
 {
     pid_t pid = fgpid(jobs);
-    kill(-pid, SIGTSTP);
-    // TODO: make sure this works
+    printf("sigtstp handler. the pid: %d \n", pid);
+    if (pid > 0) {
+        kill(-pid, SIGTSTP);
+    } else {
+        printf("No fg job");
+    }
+    // TODO: take out the exit when it's working.
+    exit(0);
     return;
 }
 
