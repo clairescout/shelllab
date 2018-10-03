@@ -418,7 +418,6 @@ void sigchld_handler(int sig)
  */
 void sigint_handler(int sig) 
 {
-    listjobs(jobs);
     pid_t pid = fgpid(jobs);
     if (pid > 0) {
         struct job_t *job = getjobpid(jobs, pid);
@@ -614,6 +613,19 @@ void listbgjobs(struct job_t *jobs) {
         if (jobs[i].pid != 0) {
             if ( jobs[i].state == BG ) {
                 printf("[%d] (%d) ", jobs[i].jid, jobs[i].pid);
+                switch (jobs[i].state) {
+                    case BG:
+                        printf("Running ");
+                        break;
+                    case FG:
+                        printf("Foreground ");
+                        break;
+                    case ST:
+                        printf("Stopped ");
+                        break;
+                    default:
+                        printf("listjobs: Internal error: job[%d].state=%d ",
+                               i, jobs[i].state);
                 printf("%s", jobs[i].cmdline);
             }
         }
