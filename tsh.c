@@ -7,6 +7,7 @@
  * do i check for builtin commands before forking?? if not, how do i exit from child and parent?
  * what do i need to mask in sigchld handler?
  * why does my sigint/sigtstp handler never stop??
+ * why after doing ./myspin 2 & and .myspin 3 &  then jobs can i not call another command?
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,7 +45,7 @@
 /* Global variables */
 extern char **environ;      /* defined in libc */
 char prompt[] = "tsh> ";    /* command line prompt (DO NOT CHANGE) */
-int verbose = 1;            /* if true, print additional output */
+int verbose = 0;            /* if true, print additional output */
 int nextjid = 1;            /* next job ID to allocate */
 char sbuf[MAXLINE];         /* for composing sprintf messages */
 
@@ -225,7 +226,6 @@ void eval(char *cmdline)
         }
     }
 
-    printf("about to return\n");
     return;
 }
 
@@ -304,8 +304,8 @@ int builtin_cmd(char **argv)
         // printf("do jobs\n");
         printf("list all jobs\n");
         listjobs(jobs);
-        //printf("list bg jobs\n");
-        //listbgjobs(jobs);
+        printf("list bg jobs\n");
+        listbgjobs(jobs);
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
         printf("do bg or fg\n");
@@ -353,7 +353,6 @@ void do_bgfg(char **argv)
  */
 void waitfg(pid_t pid)
 {
-    printf("I'm in wait");
     while(fgpid(jobs) == pid){
         sleep(1);
     }
@@ -424,7 +423,7 @@ void sigint_handler(int sig)
 {
     listjobs(jobs);
     pid_t pid = fgpid(jobs);
-    printf("sigint handler. the pid: %d \n", pid);
+    // printf("sigint handler. the pid: %d \n", pid);
     if (pid > 0) {
         kill(-pid, SIGINT); //TODO: add error handling?
     } else {
