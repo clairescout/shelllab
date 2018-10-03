@@ -301,7 +301,8 @@ int builtin_cmd(char **argv)
 //        printf("list all jobs\n");
 //        listjobs(jobs);
         // printf("list bg jobs\n");
-        listbgjobs(jobs);
+        // listbgjobs(jobs);
+        listjobs(jobs);
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
         printf("do bg or fg\n");
@@ -422,7 +423,7 @@ void sigint_handler(int sig)
     if (pid > 0) {
         struct job_t *job = getjobpid(jobs, pid);
         kill(-pid, SIGINT);
-        printf("Job [%d] (%d) terminated by signal 2\n", job->jid, pid);
+        printf("Job [%d] (%d) terminated by signal %d\n", job->jid, pid, sig);
 
     } else {
         printf("There is no fg process\n");
@@ -441,7 +442,7 @@ void sigtstp_handler(int sig)
     if (pid > 0) {
         struct job_t *job = getjobpid(jobs, pid);
         kill(-pid, SIGTSTP);
-        printf("Job [%d] (%d) terminated by signal 2\n", job->jid, pid);
+        printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, sig);
     } else {
         printf("There is no fg process\n");
     }
