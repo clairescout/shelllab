@@ -420,9 +420,11 @@ void sigint_handler(int sig)
 {
     listjobs(jobs);
     pid_t pid = fgpid(jobs);
-    printf("sigint handler. the pid: %d \n", pid);
     if (pid > 0) {
-        kill(-pid, SIGINT); //TODO: add error handling?
+        struct job_t *job = getjobpid(jobs, pid);
+        kill(-pid, SIGINT);
+        printf("Job [%d] (%d) terminated by signal 2", job->jid, pid);
+
     } else {
         printf("There is no fg process\n");
     }
