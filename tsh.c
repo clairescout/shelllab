@@ -423,13 +423,13 @@ void sigint_handler(int sig)
 {
     listjobs(jobs);
     pid_t pid = fgpid(jobs);
-    // printf("sigint handler. the pid: %d \n", pid);
+    printf("sigint handler. the pid: %d \n", pid);
     if (pid > 0) {
         kill(-pid, SIGINT); //TODO: add error handling?
     } else {
         printf("There is no fg process\n");
     }
-    exit(0); // TODO: take this out when it's working.
+    // exit(0); // TODO: take this out when it's working.
     return;
 }
 
