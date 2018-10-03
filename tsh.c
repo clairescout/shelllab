@@ -325,7 +325,7 @@ void do_bgfg(char **argv)
         if(argv[1][0] == '%'){
             // get the job based on jpid
             printf("argv1++ %s\n",argv[1]++); // FOR TESTING LATER
-            printf("argv1++ %s\n",argv[1]++)
+            printf("argv1++ %s\n",argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this
             printf("[%d] (%d) \n", job->jid, jobs->pid);
 
