@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
-    sigset_t mask, prev_mask;
+    sigset_t sigset;
     char *argv[MAXARGS];
     char buf[MAXLINE];
     int bg;
@@ -184,47 +184,42 @@ void eval(char *cmdline)
     if (argv[0] == NULL) {
         return;
     }
-    int is_builtin = builtin_cmd(argv);
 
-    sigemptyset(&mask);
-    sigaddset(&mask, SIGCHLD);
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIG_BLOCK);
     // Block SIGCHLD and save previous blocked set
-    sigprocmask(SIG_BLOCK, &mask, &prev_mask);
-    int child_pid = fork();
-    if ( child_pid == 0 ) {
-        // Restore previous blocked set, unblocking SIGCHLD
-        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
+    sigprocmask(SIG_BLOCK, &sigset, NULL);
+    if(!builtin_cmd(argv)) {
+        pid = fork();
 
-        // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
-        setpgid(0, 0);
+        if ( pid == 0 ) {
+            // Restore previous blocked set, unblocking SIGCHLD
+            sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
-        if(!is_builtin) {
+            // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
+            setpgid(0, 0);
+
+
             if (execve(argv[0], argv, environ) < 0) {
                 printf("%s: Command not found. \n", argv[0]);
                 exit(0);
             }
         } else {
-            printf("Was a builtin\n");
-        }
-    } else {
-        pid = getpid();
 
-        // Block SIGCHLD and save previous blocked set
-        //TODO: Do I need to do this again?
-        sigemptyset(&mask);
-        sigaddset(&mask, SIGCHLD);
-        sigprocmask(SIG_BLOCK, &mask, &prev_mask);
-        if ( !bg ) {
-            addjob(jobs, pid, FG, cmdline);
-        } else {
-            addjob(jobs, pid, BG, cmdline);
-        }
-        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
+            // Block SIGCHLD and save previous blocked set
+            sigprocmask(SIG_BLOCK, &sigset, NULL);
+            if ( !bg ) {
+                addjob(jobs, pid, FG, cmdline);
+                sigprocmask(SIG_UNBLOCK, &sigset, NULL);
+                waitfg(pid);
+            } else {
+                addjob(jobs, pid, BG, cmdline);
+                sigprocmask(SIG_UNBLOCK, &sigset, NULL);
+            }
 
-        if( !bg ) {
-            waitfg(pid);
         }
     }
+
 
     return;
 }
@@ -355,6 +350,7 @@ void waitfg(pid_t pid)
     while(fgpid(jobs) == pid){
         sleep(1);
     }
+    return;
 }
 
 /*****************
