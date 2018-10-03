@@ -321,10 +321,13 @@ void do_bgfg(char **argv)
     // TODO: first check if there is even another arg that follows bg/fg.
     if (argv[1]) { // TODO: double check that this is correct.
         struct job_t *job;
+        printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
             // get the job based on jpid
-            // printf(argv[1]++); // FOR TESTING LATER
+            printf("argv1++ %s\n",argv[1]++); // FOR TESTING LATER
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this
+            printf("[%d] (%d) \n", job->jid, jobs->pid);
+
         } else {
             job = getjobpid(jobs, atoi(argv[1]));
         }
