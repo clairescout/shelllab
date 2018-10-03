@@ -626,6 +626,7 @@ void listbgjobs(struct job_t *jobs) {
                     default:
                         printf("listjobs: Internal error: job[%d].state=%d ",
                                i, jobs[i].state);
+                }
                 printf("%s", jobs[i].cmdline);
             }
         }
