@@ -215,6 +215,8 @@ void eval(char *cmdline)
             } else {
                 addjob(jobs, pid, BG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
+                struct job_t *job = getjobpid(jobs, pid);
+                printf("[%d] (%d) %s", job->jid, pid, job->cmdline);
             }
 
         }
