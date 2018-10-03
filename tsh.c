@@ -296,6 +296,7 @@ int builtin_cmd(char **argv)
 printf("here i am in builtin");
 
     if( strcmp("quit", argv[0]) == 0) {
+        printf("quit");
         exit(0);
     } else if( strcmp("jobs", argv[0]) == 0) {
         // printf("do jobs\n");
@@ -303,6 +304,7 @@ printf("here i am in builtin");
 //        listjobs(jobs);
         // printf("list bg jobs\n");
         // listbgjobs(jobs);
+        printf("jobs");
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
