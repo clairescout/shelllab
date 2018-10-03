@@ -310,7 +310,7 @@ printf("here i am in builtin");
         do_bgfg(argv);
         return 1;
     }
-
+    printf("returning");
     return 0;     /* not a builtin command */
 }
 
