@@ -318,8 +318,10 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
+    printf("in here first");
     // TODO: first check if there is even another arg that follows bg/fg.
     if (argv[1]) { // TODO: double check that this is correct.
+        printf("in here");
         struct job_t *job;
         printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
