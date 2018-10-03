@@ -427,7 +427,6 @@ void sigint_handler(int sig)
     } else {
         printf("There is no fg process\n");
     }
-    // exit(0); // TODO: take this out when it's working.
     return;
 }
 
@@ -439,14 +438,13 @@ void sigint_handler(int sig)
 void sigtstp_handler(int sig) 
 {
     pid_t pid = fgpid(jobs);
-    printf("sigtstp handler. the pid: %d \n", pid);
     if (pid > 0) {
+        struct job_t *job = getjobpid(jobs, pid);
         kill(-pid, SIGTSTP);
+        printf("Job [%d] (%d) terminated by signal 2\n", job->jid, pid);
     } else {
-        printf("No fg job");
+        printf("There is no fg process\n");
     }
-    // TODO: take out the exit when it's working.
-    exit(0);
     return;
 }
 
@@ -606,9 +604,7 @@ void listjobs(struct job_t *jobs)
 }
 
 void listbgjobs(struct job_t *jobs) {
-    // TODO: check if this works correctly
     int i;
-
     for (i = 0; i < MAXJOBS; i++) {
         if (jobs[i].pid != 0) {
             if ( jobs[i].state == BG ) {
