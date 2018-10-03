@@ -297,8 +297,7 @@ int builtin_cmd(char **argv)
     char *bg_cmd = "bg";
     char *fg_cmd = "fg";
 
-    if( strcmp(quit_cmd, argv[0]) == 0) {
-        printf("Do quit\n");
+    if( strcmp("quit", argv[0]) == 0) {
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
         // printf("do jobs\n");
