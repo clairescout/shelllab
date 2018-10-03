@@ -423,7 +423,7 @@ void sigint_handler(int sig)
     if (pid > 0) {
         struct job_t *job = getjobpid(jobs, pid);
         kill(-pid, SIGINT);
-        printf("Job [%d] (%d) terminated by signal 2", job->jid, pid);
+        printf("Job [%d] (%d) terminated by signal 2\n", job->jid, pid);
 
     } else {
         printf("There is no fg process\n");
