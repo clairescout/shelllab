@@ -298,9 +298,9 @@ int builtin_cmd(char **argv)
         exit(0);
     } else if( strcmp(jobs_cmd, argv[0]) == 0) {
         // printf("do jobs\n");
-        printf("list all jobs\n");
-        listjobs(jobs);
-        printf("list bg jobs\n");
+//        printf("list all jobs\n");
+//        listjobs(jobs);
+        // printf("list bg jobs\n");
         listbgjobs(jobs);
         return 1;
     } else if( strcmp(bg_cmd, argv[0]) == 0 || strcmp(fg_cmd, argv[0]) == 0) {
