@@ -101,6 +101,7 @@ int main(int argc, char **argv)
     char c;
     char cmdline[MAXLINE];
     int emit_prompt = 1; /* emit prompt (default) */
+    printf("in main\n");
 
     /* Redirect stderr to stdout (so that driver will get all output
      * on the pipe connected to stdout) */
@@ -141,6 +142,7 @@ int main(int argc, char **argv)
 
 	/* Read command line */
 	if (emit_prompt) {
+	    printf("emit prompt\n");
 	    printf("%s", prompt);
 	    fflush(stdout);
 	}
@@ -148,11 +150,14 @@ int main(int argc, char **argv)
 	    app_error("fgets error");
 	if (feof(stdin)) { /* End of file (ctrl-d) */
 	    fflush(stdout);
+	    printf("end of file\n");
 	    exit(0);
 	}
 
 	/* Evaluate the command line */
+	printf("about to eval\n");
 	eval(cmdline);
+	printf("just eval\n");
 	fflush(stdout);
 	fflush(stdout);
     } 
@@ -173,6 +178,7 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
+    printf("in eval\n");
     sigset_t sigset;
     char *argv[MAXARGS];
     char buf[MAXLINE];
@@ -182,12 +188,14 @@ void eval(char *cmdline)
     strcpy(buf, cmdline);
     bg = parseline( buf, argv );
     if (argv[0] == NULL) {
+        printf("in argv == null\n");
         return;
     }
 
     sigemptyset(&sigset);
     sigaddset(&sigset, SIG_BLOCK);
     sigprocmask(SIG_BLOCK, &sigset, NULL);
+    printf("just blocked\n");
     if(!builtin_cmd(argv)) {
         pid = fork();
 
