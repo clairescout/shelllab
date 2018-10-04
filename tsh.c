@@ -326,8 +326,9 @@ void do_bgfg(char **argv)
         if(argv[1][0] == '%'){
             fprintf(stderr, "%s", "in if %\n");
             // get the job based on jpid
-            job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
-            printf("[%d] (%d) \n", job->jid, jobs->pid);
+            fprintf(stderr, "%d", atoi(argv[1]++));
+            // job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
+            // printf("[%d] (%d) \n", job->jid, jobs->pid);
 
         } else {
             fprintf(stderr, "%s", "in bgfg else statement\n");
