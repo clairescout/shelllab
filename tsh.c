@@ -190,9 +190,11 @@ void eval(char *cmdline)
     // Block SIGCHLD and save previous blocked set
     sigprocmask(SIG_BLOCK, &sigset, NULL);
     if(!builtin_cmd(argv)) {
+        printf("here before fork\n");
         pid = fork();
 
         if ( pid == 0 ) {
+            printf("in child\n");
             // Restore previous blocked set, unblocking SIGCHLD
             sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
@@ -205,6 +207,7 @@ void eval(char *cmdline)
                 exit(0);
             }
         } else {
+            printf("in parent \n");
 
             // Block SIGCHLD and save previous blocked set
             sigprocmask(SIG_BLOCK, &sigset, NULL);
@@ -221,7 +224,6 @@ void eval(char *cmdline)
 
         }
     }
-
 
     return;
 }
