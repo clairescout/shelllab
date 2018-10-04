@@ -19,6 +19,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <signal.h>
+#include <stdbool.h>
 
 /* Misc manifest constants */
 #define MAXLINE    1024   /* max line size */
@@ -92,6 +93,8 @@ void unix_error(char *msg);
 void app_error(char *msg);
 typedef void handler_t(int);
 handler_t *Signal(int signum, handler_t *handler);
+
+int isInt(char *input);
 
 /*
  * main - The shell's main routine 
@@ -327,6 +330,10 @@ void do_bgfg(char **argv)
             //fprintf(stderr, "%s", "in if %\n");
             // get the job based on jpid
             argv[1]++;
+            if (!isInt(argv[1])) {
+                printf("%s: argument must be a PID or jobid\n", argv[0]); // TODO: take out repeated code
+                return;
+            }
             // fprintf(stderr, "%s", argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             if (strcmp(argv[0], "bg") == 0) {
@@ -334,6 +341,10 @@ void do_bgfg(char **argv)
             }
 
         } else {
+            if(!isInt(argv[1])) {
+                printf("%s: argument must be a PID or jobid\n", argv[0]);
+                return;
+            }
             fprintf(stderr, "%s", "in bgfg else statement\n");
             job = getjobpid(jobs, atoi(argv[1]));
         }
@@ -354,6 +365,19 @@ void do_bgfg(char **argv)
         printf("%s command requires PID or jobid argument\n", argv[0]);
     }
     return;
+}
+
+/*
+ * isInt - returns if the given input is a string or not
+ */
+int isInt(char *input) {
+    int length = strlen (input);
+    for (int i = 0; i < length; i++) {
+        if (!isdigit(input[i])) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 /* 
