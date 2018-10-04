@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ebe60db6-66a7-4317-87d6-76d97067b7b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/trace09.txt" beforeDir="false" afterPath="$PROJECT_DIR$/trace09.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tsh.c" beforeDir="false" afterPath="$PROJECT_DIR$/tsh.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -42,13 +41,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="c" value="7169" />
+          <entry key="c" value="7184" />
           <entry key="txt" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="7169" />
+          <entry key="ObjectiveC" value="7184" />
           <entry key="PLAIN_TEXT" value="10" />
         </counts>
       </usages-collector>
@@ -56,16 +55,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
-              <caret line="292" lean-forward="true" selection-start-line="290" selection-start-column="1" selection-end-line="292" />
+            <state relative-caret-position="295">
+              <caret line="224" column="7" selection-start-line="224" selection-start-column="7" selection-end-line="224" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/trace09.txt">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
@@ -111,8 +110,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/tsh.c" />
         <option value="$PROJECT_DIR$/trace09.txt" />
+        <option value="$PROJECT_DIR$/tsh.c" />
       </list>
     </option>
   </component>
@@ -171,7 +170,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="25841000" />
+      <workItem from="1537893734233" duration="25934000" />
     </task>
     <task id="LOCAL-00001" summary="asldkfj">
       <created>1538666482449</created>
@@ -184,19 +183,19 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="25841000" />
+    <option name="totallyTimeSpent" value="25934000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17525035" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17525035" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="CMake" weight="0.32891566" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.0" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.32891566" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -229,17 +228,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tsh.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="292" lean-forward="true" selection-start-line="290" selection-start-column="1" selection-end-line="292" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/trace09.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tsh.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="224" column="7" selection-start-line="224" selection-start-column="7" selection-end-line="224" selection-end-column="7" />
         </state>
       </provider>
     </entry>

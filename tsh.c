@@ -192,7 +192,7 @@ void eval(char *cmdline)
         pid = fork();
 
         if ( pid == 0 ) {
-            printf("in child\n");
+           //  printf("in child\n");
             sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
             // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
@@ -204,16 +204,16 @@ void eval(char *cmdline)
                 exit(0);
             }
         } else {
-            printf("in parent\n");
+            // printf("in parent\n");
             sigprocmask(SIG_BLOCK, &sigset, NULL);
             if ( !bg ) {
-                printf("in if not bg\n");
+                // printf("in if not bg\n");
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
                 printf("finished in if not bg\n");
             } else {
-                printf("in is bg\n");
+                // printf("in is bg\n");
                 addjob(jobs, pid, BG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 struct job_t *job = getjobpid(jobs, pid);
@@ -222,7 +222,7 @@ void eval(char *cmdline)
 
         }
     }
-    printf("returning\n");
+    // printf("returning\n");
     return;
 }
 
