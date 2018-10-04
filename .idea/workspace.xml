@@ -9,9 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ebe60db6-66a7-4317-87d6-76d97067b7b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tsh.c" beforeDir="false" afterPath="$PROJECT_DIR$/tsh.c" afterDir="false" />
-    </list>
+    <list default="true" id="ebe60db6-66a7-4317-87d6-76d97067b7b8" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="296" column="46" selection-start-line="296" selection-start-column="46" selection-end-line="296" selection-end-column="46" />
+            <state relative-caret-position="289">
+              <caret line="303" column="5" lean-forward="true" selection-start-line="303" selection-start-column="5" selection-end-line="303" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -158,12 +156,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="22668000" />
+      <workItem from="1537893734233" duration="22744000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="22668000" />
+    <option name="totallyTimeSpent" value="22744000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -206,8 +204,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tsh.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="296" column="46" selection-start-line="296" selection-start-column="46" selection-end-line="296" selection-end-column="46" />
+        <state relative-caret-position="289">
+          <caret line="303" column="5" lean-forward="true" selection-start-line="303" selection-start-column="5" selection-end-line="303" selection-end-column="5" />
         </state>
       </provider>
     </entry>
