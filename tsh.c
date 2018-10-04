@@ -187,15 +187,12 @@ void eval(char *cmdline)
 
     sigemptyset(&sigset);
     sigaddset(&sigset, SIG_BLOCK);
-    // Block SIGCHLD and save previous blocked set
     sigprocmask(SIG_BLOCK, &sigset, NULL);
     if(!builtin_cmd(argv)) {
-        // printf("here before fork\n");
         pid = fork();
 
         if ( pid == 0 ) {
-            // printf("in child\n");
-            // Restore previous blocked set, unblocking SIGCHLD
+            printf("in child\n");
             sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
             // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
@@ -207,17 +204,15 @@ void eval(char *cmdline)
                 exit(0);
             }
         } else {
-            // printf("in parent \n");
-
-            // Block SIGCHLD and save previous blocked set
+            printf("in parent\n");
             sigprocmask(SIG_BLOCK, &sigset, NULL);
             if ( !bg ) {
-                // printf("in not bg\n");
+                printf("in if not bg\n");
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
             } else {
-                // printf("in bg\n");
+                printf("in is bg\n");
                 addjob(jobs, pid, BG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 struct job_t *job = getjobpid(jobs, pid);
@@ -293,7 +288,6 @@ int parseline(const char *cmdline, char **argv)
  */
 int builtin_cmd(char **argv)
 {
-// printf("here i am in builtin\n");
  printf("argv: %s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
@@ -302,11 +296,10 @@ int builtin_cmd(char **argv)
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
-        printf("do bg or fg\n");
+        printf("do bgfg\n");
         do_bgfg(argv);
         return 1;
     }
-    // printf("returning\n");
     return 0;     /* not a builtin command */
 }
 
@@ -315,35 +308,32 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
-    printf("in here first");
-    // TODO: first check if there is even another arg that follows bg/fg.
-    if (argv[1]) { // TODO: double check that this is correct.
-        printf("in here");
+    printf("in bgfg\n");
+    // first check if there is even another arg that follows bg/fg.
+    if (argv[1]) {
+        printf("in bgfg if statement\n");
         struct job_t *job;
         printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
             // get the job based on jpid
-            printf("argv1++ %s\n",argv[1]++); // FOR TESTING LATER
-            printf("argv1++ %s\n",argv[1]++);
-            job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this
+            job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             printf("[%d] (%d) \n", job->jid, jobs->pid);
 
         } else {
             job = getjobpid(jobs, atoi(argv[1]));
         }
-        // TODO: where do i need to mask here?
         pid_t pid = job->pid;
 
-        // seng sigcontinue
+        // send sigcontinue
         kill(-pid, SIGCONT);
-        // TODO: how do i determine if its running in fg or bg?
         // update table to show correct state
-        // TODO: do i mask this?
         if (strcmp(argv[0], "bg") == 0) {
             job->state = BG;
         } else {
             job->state = FG;
         }
+    } else {
+        printf("%s command requires PID or jobid argument\n", argv[0]);
     }
     return;
 }
@@ -372,7 +362,7 @@ void waitfg(pid_t pid)
  */
 void sigchld_handler(int sig)
 {
-    sigset_t mask, prev_mask;
+    sigset_t sigset;
     int status;
     pid_t pid;
     // TODO: MASK
@@ -380,10 +370,10 @@ void sigchld_handler(int sig)
         // check and handle all three cases
 
         // TODO: get this mask to it's actually correct
-        sigemptyset(&mask);
-        sigaddset(&mask, SIGCHLD);
-        // Block SIGCHLD and save previous blocked set
-        sigprocmask(SIG_BLOCK, &mask, &prev_mask);
+        sigemptyset(&sigset);
+        sigaddset(&sigset, SIG_BLOCK);
+        // Block SIGCHLD
+        sigprocmask(SIG_BLOCK, &sigset, NULL);
         if (WIFSTOPPED(status)) {
             // got signal from sigtstp handler
 
@@ -409,7 +399,7 @@ void sigchld_handler(int sig)
         } else {
             printf("ERROR HERE"); //TODO: how should I handle this error?
         }
-        sigprocmask(SIG_SETMASK, &prev_mask, NULL);
+        sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
     }
     return;
