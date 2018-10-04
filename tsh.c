@@ -294,7 +294,7 @@ int parseline(const char *cmdline, char **argv)
 int builtin_cmd(char **argv)
 {
 // printf("here i am in builtin\n");
-// printf("argv: %s\n", argv[0]);
+ printf("argv: %s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
         exit(0);
