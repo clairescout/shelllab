@@ -42,13 +42,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="c" value="7792" />
+          <entry key="c" value="7793" />
           <entry key="txt" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="7792" />
+          <entry key="ObjectiveC" value="7793" />
           <entry key="PLAIN_TEXT" value="55" />
         </counts>
       </usages-collector>
@@ -59,8 +59,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="331" column="32" selection-start-line="331" selection-start-column="32" selection-end-line="331" selection-end-column="32" />
+            <state relative-caret-position="382">
+              <caret line="348" column="12" selection-start-line="348" selection-start-column="12" selection-end-line="348" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -116,7 +116,6 @@
       <find>nextjid</find>
       <find>foreground</find>
       <find>&amp;</find>
-      <find>listjobs</find>
       <find>quit</find>
       <find>jobs</find>
       <find>wait</find>
@@ -127,6 +126,7 @@
       <find>(</find>
       <find>exit</find>
       <find>printf</find>
+      <find>listjobs</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -195,7 +195,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="30356000" />
+      <workItem from="1537893734233" duration="30693000" />
     </task>
     <task id="LOCAL-00001" summary="asldkfj">
       <created>1538666482449</created>
@@ -208,7 +208,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30356000" />
+    <option name="totallyTimeSpent" value="30693000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -283,8 +283,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tsh.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="331" column="32" selection-start-line="331" selection-start-column="32" selection-end-line="331" selection-end-column="32" />
+        <state relative-caret-position="382">
+          <caret line="348" column="12" selection-start-line="348" selection-start-column="12" selection-end-line="348" selection-end-column="12" />
         </state>
       </provider>
     </entry>

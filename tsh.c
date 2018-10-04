@@ -346,7 +346,7 @@ void do_bgfg(char **argv)
         } else {
             //fprintf(stderr, "%s", "set state to fg\n");
             job->state = FG;
-           //  waitfg(pid);
+            waitfg(pid);
         }
     } else {
         printf("%s command requires PID or jobid argument\n", argv[0]);
