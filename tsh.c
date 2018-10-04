@@ -293,10 +293,10 @@ int builtin_cmd(char **argv)
 //    char *jobs_cmd = "jobs";
 //    char *bg_cmd = "bg";
 //    char *fg_cmd = "fg";
-printf("here i am in builtin");
+printf("here i am in builtin\n");
+printf("%s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
-        printf("quit");
         exit(0);
     } else if( strcmp("jobs", argv[0]) == 0) {
         // printf("do jobs\n");
@@ -304,7 +304,6 @@ printf("here i am in builtin");
 //        listjobs(jobs);
         // printf("list bg jobs\n");
         // listbgjobs(jobs);
-        printf("jobs");
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
@@ -312,7 +311,7 @@ printf("here i am in builtin");
         do_bgfg(argv);
         return 1;
     }
-    printf("returning");
+    printf("returning\n");
     return 0;     /* not a builtin command */
 }
 
