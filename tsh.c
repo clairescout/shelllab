@@ -212,10 +212,12 @@ void eval(char *cmdline)
             // Block SIGCHLD and save previous blocked set
             sigprocmask(SIG_BLOCK, &sigset, NULL);
             if ( !bg ) {
+                printf("in not bg\n");
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
             } else {
+                printf("in bg\n");
                 addjob(jobs, pid, BG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 struct job_t *job = getjobpid(jobs, pid);
