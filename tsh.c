@@ -427,15 +427,16 @@ void sigchld_handler(int sig)
 
             //update table - change state to stopped.
             struct job_t *job = getjobpid(jobs, pid);
+            printf("Job [%d] (%d) stopped stby signal %d\n", job->jid, pid, WSTOPSIG(status));
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
             // returns true if the child process terminated because of a signal that was not caught
 
             // update job table - change state to continued
             struct job_t *job = getjobpid(jobs, pid);
+            // TODO: how do i update state to continued?
             job->state = BG; // TODO: FIX THIS
             int sig = WTERMSIG(status);
-            fprintf(stderr, "%d", sig);
             if (sig) {
                 // returns the number of the signal that caused the child process to terminate
                 printf("Job [%d] (%d) terminated by signal %d\n", job->jid, pid, sig);
