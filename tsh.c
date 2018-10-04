@@ -101,7 +101,7 @@ int main(int argc, char **argv)
     char c;
     char cmdline[MAXLINE];
     int emit_prompt = 1; /* emit prompt (default) */
-    printf("in main\n");
+    fprintf(stderr, "%s", "in main\n");
 
     /* Redirect stderr to stdout (so that driver will get all output
      * on the pipe connected to stdout) */
@@ -139,11 +139,10 @@ int main(int argc, char **argv)
 
     /* Execute the shell's read/eval loop */
     while (1) {
-        printf("i'm in the while\n");
+        fprintf(stderr, "%s", "in the while\n");
 
 	/* Read command line */
 	if (emit_prompt) {
-	    printf("emit prompt\n");
 	    printf("%s", prompt);
 	    fflush(stdout);
 	}
@@ -151,14 +150,14 @@ int main(int argc, char **argv)
 	    app_error("fgets error");
 	if (feof(stdin)) { /* End of file (ctrl-d) */
 	    fflush(stdout);
-	    printf("end of file\n");
+        fprintf(stderr, "%s", "end of file\n");
 	    exit(0);
 	}
 
 	/* Evaluate the command line */
-	printf("about to eval\n");
+	fprintf(stderr, "%s", "about to eval\n");
 	eval(cmdline);
-	printf("just eval\n");
+	fprintf(stderr, "%s", "just did eval\n");
 	fflush(stdout);
 	fflush(stdout);
     } 
@@ -179,7 +178,7 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
-    printf("in eval\n");
+    fprintf(stderr, "%s", "in eval\n");
     sigset_t sigset;
     char *argv[MAXARGS];
     char buf[MAXLINE];
@@ -189,14 +188,13 @@ void eval(char *cmdline)
     strcpy(buf, cmdline);
     bg = parseline( buf, argv );
     if (argv[0] == NULL) {
-        printf("in argv == null\n");
+        fprintf(stderr, "%s", "in argv == null\n");
         return;
     }
 
     sigemptyset(&sigset);
     sigaddset(&sigset, SIG_BLOCK);
     sigprocmask(SIG_BLOCK, &sigset, NULL);
-    printf("just blocked\n");
     if(!builtin_cmd(argv)) {
         pid = fork();
 
@@ -298,7 +296,8 @@ int parseline(const char *cmdline, char **argv)
  */
 int builtin_cmd(char **argv)
 {
- printf("argv: %s\n", argv[0]);
+    fprintf(stderr, "%s %s\n", "argv: ", argv[0]);
+    //printf("argv: %s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
         exit(0);
@@ -306,7 +305,7 @@ int builtin_cmd(char **argv)
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
-        printf("do bgfg\n");
+        fprintf(stderr, "%s", "dobgfg\n");
         do_bgfg(argv);
         return 1;
     }
@@ -318,18 +317,20 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
-    printf("in bgfg\n");
+    fprintf(stderr, "%s", "in bgfg\n");
     // first check if there is even another arg that follows bg/fg.
     if (argv[1]) {
-        printf("in bgfg if statement\n");
+        fprintf(stderr, "%s", "in bgfg if statement\n");
         struct job_t *job;
-        printf("argv[1][0] %c\n",argv[1][0]);
+        // printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
+            fprintf(stderr, "%s", "in if %\n");
             // get the job based on jpid
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             printf("[%d] (%d) \n", job->jid, jobs->pid);
 
         } else {
+            fprintf(stderr, "%s", "in bgfg else statement\n");
             job = getjobpid(jobs, atoi(argv[1]));
         }
         pid_t pid = job->pid;
@@ -338,9 +339,12 @@ void do_bgfg(char **argv)
         kill(-pid, SIGCONT);
         // update table to show correct state
         if (strcmp(argv[0], "bg") == 0) {
+            fprintf(stderr, "%s", "set state to bg\n");
             job->state = BG;
         } else {
+            fprintf(stderr, "%s", "set state to fg\n");
             job->state = FG;
+           //  waitfg(pid);
         }
     } else {
         printf("%s command requires PID or jobid argument\n", argv[0]);
