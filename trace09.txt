@@ -1,7 +1,6 @@
 #
 # trace09.txt - Process bg builtin command
 #
-/bin/echo tsh> bg %2
 bg %2
 
 /bin/echo tsh> jobs
