@@ -3,7 +3,6 @@
 #
 
 
-/bin/echo tsh> jobs
 jobs
 
 bg %2
