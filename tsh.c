@@ -139,6 +139,7 @@ int main(int argc, char **argv)
 
     /* Execute the shell's read/eval loop */
     while (1) {
+        printf("i'm in the while\n");
 
 	/* Read command line */
 	if (emit_prompt) {
