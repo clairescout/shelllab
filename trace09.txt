@@ -13,7 +13,7 @@ TSTP
 /bin/echo tsh> jobs
 jobs
 
-/bin/echo tsh> bg %2
+tsh> bg %2
 bg %2
 
 /bin/echo tsh> jobs

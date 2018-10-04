@@ -211,6 +211,7 @@ void eval(char *cmdline)
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
+                printf("finished in if not bg\n");
             } else {
                 printf("in is bg\n");
                 addjob(jobs, pid, BG, cmdline);
@@ -221,7 +222,7 @@ void eval(char *cmdline)
 
         }
     }
-
+    printf("returning\n");
     return;
 }
 
@@ -365,11 +366,9 @@ void sigchld_handler(int sig)
     sigset_t sigset;
     int status;
     pid_t pid;
-    // TODO: MASK
     while( (pid = waitpid(-1, &status, WNOHANG|WUNTRACED)) > 0) {
         // check and handle all three cases
 
-        // TODO: get this mask to it's actually correct
         sigemptyset(&sigset);
         sigaddset(&sigset, SIG_BLOCK);
         // Block SIGCHLD
@@ -382,9 +381,10 @@ void sigchld_handler(int sig)
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
             // returns true if the child process terminated because of a signal that was not caught
+
             // update job table - change state to continued
             struct job_t *job = getjobpid(jobs, pid);
-            job->state = BG; // TODO: Is this right?
+            job->state = BG; // TODO: FIX THIS
             if (WTERMSIG(status)) {
                 // returns the number of the signal that caused the child process to terminate
                 // TODO: print terminated
@@ -394,10 +394,9 @@ void sigchld_handler(int sig)
             }
         } else if (WIFEXITED(status)) {
             // returns true if the child terminated normally, via a call to exit or a return
-            // all deletes happen here and only here
             deletejob(jobs, pid);
         } else {
-            printf("ERROR HERE"); //TODO: how should I handle this error?
+            printf("ERROR HERE");
         }
         sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
