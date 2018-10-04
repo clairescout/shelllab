@@ -347,6 +347,7 @@ void do_bgfg(char **argv)
             }
             fprintf(stderr, "%s", "in bgfg else statement\n");
             job = getjobpid(jobs, atoi(argv[1]));
+            fprintf(stderr, "[%d] (%d) %s", job->jid, job->pid, job->cmdline);
         }
         pid_t pid = job->pid;
 
