@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ebe60db6-66a7-4317-87d6-76d97067b7b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tsh.c" beforeDir="false" afterPath="$PROJECT_DIR$/tsh.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace09.txt" beforeDir="false" afterPath="$PROJECT_DIR$/trace09.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,20 +43,20 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="c" value="7738" />
-          <entry key="txt" value="54" />
+          <entry key="txt" value="55" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="ObjectiveC" value="7738" />
-          <entry key="PLAIN_TEXT" value="54" />
+          <entry key="PLAIN_TEXT" value="55" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="177">
@@ -65,11 +65,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/trace09.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+            <state relative-caret-position="240">
+              <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -135,8 +135,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/trace09.txt" />
         <option value="$PROJECT_DIR$/tsh.c" />
+        <option value="$PROJECT_DIR$/trace09.txt" />
       </list>
     </option>
   </component>
@@ -195,7 +195,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="29666000" />
+      <workItem from="1537893734233" duration="29742000" />
     </task>
     <task id="LOCAL-00001" summary="asldkfj">
       <created>1538666482449</created>
@@ -208,7 +208,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29666000" />
+    <option name="totallyTimeSpent" value="29742000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -274,17 +274,17 @@
     <entry file="file://$PROJECT_DIR$/trace10.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/trace09.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tsh.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="177">
           <caret line="328" column="22" selection-start-line="328" selection-start-column="22" selection-end-line="328" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/trace09.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="6" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
         </state>
       </provider>
     </entry>
