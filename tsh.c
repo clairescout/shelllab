@@ -211,7 +211,7 @@ void eval(char *cmdline)
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
-                printf("finished in if not bg\n");
+                // printf("finished in if not bg\n");
             } else {
                 // printf("in is bg\n");
                 addjob(jobs, pid, BG, cmdline);
