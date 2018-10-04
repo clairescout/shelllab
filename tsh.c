@@ -337,7 +337,7 @@ void do_bgfg(char **argv)
             // fprintf(stderr, "%s", argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             if (!job) {
-                printf("(%d): No such process", atoi(argv[1]));
+                printf("(%d): No such process\n", atoi(argv[1]));
                 return;
             }
             if (strcmp(argv[0], "bg") == 0) {
@@ -349,10 +349,9 @@ void do_bgfg(char **argv)
                 printf("%s: argument must be a PID or jobid\n", argv[0]);
                 return;
             }
-            fprintf(stderr, "%s", "in bgfg else statement\n");
             job = getjobpid(jobs, atoi(argv[1]));
             if (!job) {
-                printf("(%d): No such process", atoi(argv[1]));
+                printf("(%d): No such process\n", atoi(argv[1]));
                 return; //TODO: take out reapeated code
             }
             fprintf(stderr, "[%d] (%d) %s", job->jid, job->pid, job->cmdline);
