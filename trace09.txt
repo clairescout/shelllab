@@ -1,12 +1,6 @@
 #
 # trace09.txt - Process bg builtin command
 #
-/bin/echo -e tsh> ./myspin 4 \046
-./myspin 4 &
-
-/bin/echo -e tsh> ./myspin 5
-./myspin 5 
-
 
 
 bg %2
