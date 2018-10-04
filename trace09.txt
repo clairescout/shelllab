@@ -2,7 +2,7 @@
 # trace09.txt - Process bg builtin command
 #
 
-bg
+bg %
 jobs
 
 
