@@ -305,7 +305,7 @@ int builtin_cmd(char **argv)
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
-        fprintf(stderr, "%s", "dobgfg\n");
+        //fprintf(stderr, "%s", "dobgfg\n");
         do_bgfg(argv);
         return 1;
     }
@@ -317,19 +317,19 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
-    fprintf(stderr, "%s", "in bgfg\n");
+    //fprintf(stderr, "%s", "in bgfg\n");
     // first check if there is even another arg that follows bg/fg.
     if (argv[1]) {
-        fprintf(stderr, "%s", "in bgfg if statement\n");
+        //fprintf(stderr, "%s", "in bgfg if statement\n");
         struct job_t *job;
         // printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
-            fprintf(stderr, "%s", "in if %\n");
+            //fprintf(stderr, "%s", "in if %\n");
             // get the job based on jpid
             argv[1]++;
             // fprintf(stderr, "%s", argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
-            printf("[%d] (%d) \n", job->jid, jobs->pid);
+            //printf("[%d] (%d) \n", job->jid, jobs->pid);
 
         } else {
             fprintf(stderr, "%s", "in bgfg else statement\n");
@@ -341,10 +341,10 @@ void do_bgfg(char **argv)
         kill(-pid, SIGCONT);
         // update table to show correct state
         if (strcmp(argv[0], "bg") == 0) {
-            fprintf(stderr, "%s", "set state to bg\n");
+            //fprintf(stderr, "%s", "set state to bg\n");
             job->state = BG;
         } else {
-            fprintf(stderr, "%s", "set state to fg\n");
+            //fprintf(stderr, "%s", "set state to fg\n");
             job->state = FG;
            //  waitfg(pid);
         }
