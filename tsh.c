@@ -434,9 +434,11 @@ void sigchld_handler(int sig)
             // update job table - change state to continued
             struct job_t *job = getjobpid(jobs, pid);
             job->state = BG; // TODO: FIX THIS
-            if (WTERMSIG(status)) {
+            int sig = WTERMSIG(status);
+            fprintf(stderr, "%d", sig);
+            if (sig) {
                 // returns the number of the signal that caused the child process to terminate
-                // TODO: print terminated
+                printf("Job [%d] (%d) terminated by signal %d\n", job->jid, pid, sig);
                 deletejob(jobs, pid); // TODO: we say below that all deletes only happen there, so should it not be deleted here?
             } else {
                 //TODO: update table to be what?
