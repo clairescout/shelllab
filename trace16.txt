@@ -14,3 +14,6 @@ jobs
 /bin/echo tsh> ./myint 2 
 ./myint 2
 
+/bin/echo tsh> jobs
+jobs
+
