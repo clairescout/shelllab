@@ -294,7 +294,7 @@ int builtin_cmd(char **argv)
 //    char *bg_cmd = "bg";
 //    char *fg_cmd = "fg";
 printf("here i am in builtin\n");
-printf("%s\n", argv[0]);
+printf("argv: %s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
         exit(0);
