@@ -101,7 +101,7 @@ int main(int argc, char **argv)
     char c;
     char cmdline[MAXLINE];
     int emit_prompt = 1; /* emit prompt (default) */
-    fprintf(stderr, "%s", "in main\n");
+    // fprintf(stderr, "%s", "in main\n");
 
     /* Redirect stderr to stdout (so that driver will get all output
      * on the pipe connected to stdout) */
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
     /* Execute the shell's read/eval loop */
     while (1) {
-        fprintf(stderr, "%s", "in the while\n");
+        // fprintf(stderr, "%s", "in the while\n");
 
 	/* Read command line */
 	if (emit_prompt) {
@@ -150,14 +150,14 @@ int main(int argc, char **argv)
 	    app_error("fgets error");
 	if (feof(stdin)) { /* End of file (ctrl-d) */
 	    fflush(stdout);
-        fprintf(stderr, "%s", "end of file\n");
+        // fprintf(stderr, "%s", "end of file\n");
 	    exit(0);
 	}
 
 	/* Evaluate the command line */
-	fprintf(stderr, "%s", "about to eval\n");
+	// fprintf(stderr, "%s", "about to eval\n");
 	eval(cmdline);
-	fprintf(stderr, "%s", "just did eval\n");
+	// fprintf(stderr, "%s", "just did eval\n");
 	fflush(stdout);
 	fflush(stdout);
     } 
@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
-    fprintf(stderr, "%s", "in eval\n");
+    // fprintf(stderr, "%s", "in eval\n");
     sigset_t sigset;
     char *argv[MAXARGS];
     char buf[MAXLINE];
