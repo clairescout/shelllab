@@ -311,13 +311,13 @@ void do_bgfg(char **argv)
         if(argv[1][0] == '%'){
             // get the job based on jpid
             argv[1]++;
-            //fprintf(stderr, "%s\n", argv[1]);
+            // verify that input is an int
             if (!isInt(argv[1])) {
-                printf("%s: argument must be a PID or %%jobid\n", argv[0]); // TODO: take out repeated code
                 return;
             }
             job = getjobjid(jobs, atoi(argv[1]));
-            // fprintf(stderr, "%s\n", argv[1]);
+
+            // verify that job exists for given input
             if (!job) {
                 printf("%%%s: No such job\n", argv[1]);
                 return;
@@ -327,21 +327,25 @@ void do_bgfg(char **argv)
             }
 
         } else {
+            // verify that input is an int
             if(!isInt(argv[1])) {
-                printf("%s: argument must be a PID or %%jobid\n", argv[0]);
                 return;
             }
             job = getjobpid(jobs, atoi(argv[1]));
+
+            // verify that job exists for given input
             if (!job) {
                 printf("(%d): No such process\n", atoi(argv[1]));
-                return; //TODO: take out reapeated code
+                return;
             }
             fprintf(stderr, "[%d] (%d) %s", job->jid, job->pid, job->cmdline);
         }
+
         pid_t pid = job->pid;
 
         // send sigcontinue
         kill(-pid, SIGCONT);
+
         // update table to show correct state
         if (strcmp(argv[0], "bg") == 0) {
             job->state = BG;
@@ -362,15 +366,11 @@ int isInt(char *input) {
     int length = strlen (input);
     for (int i = 0; i < length; i++) {
         if (!isdigit(input[i])) {
+            printf("%s: argument must be a PID or %%jobid\n", argv[0]);
             return 0;
         }
     }
     return 1;
-}
-
-int isValid(char *input, char *process) {
-    return 1;
-
 }
 
 /* 
@@ -401,33 +401,26 @@ void sigchld_handler(int sig)
     int status;
     pid_t pid;
     while( (pid = waitpid(-1, &status, WNOHANG|WUNTRACED)) > 0) {
-        // check and handle all three cases
+
 
         sigemptyset(&sigset);
         sigaddset(&sigset, SIG_BLOCK);
-        // Block SIGCHLD
+        // BLOCK
         sigprocmask(SIG_BLOCK, &sigset, NULL);
         if (WIFSTOPPED(status)) {
             // got signal from sigtstp handler
 
             //update table - change state to stopped.
-            struct job_t *job = getjobpid(jobs, pid);
             printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, WSTOPSIG(status));
+            struct job_t *job = getjobpid(jobs, pid);
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
-            // returns true if the child process terminated because of a signal that was not caught
-
-            // update job table - change state to continued
-            struct job_t *job = getjobpid(jobs, pid);
-            // TODO: how do i update state to continued?
-            job->state = BG; // TODO: FIX THIS
+            // set sig to equal the number of the signal that caused the child process to terminate
             int sig = WTERMSIG(status);
             if (sig) {
-                // returns the number of the signal that caused the child process to terminate
+                struct job_t *job = getjobpid(jobs, pid);
                 printf("Job [%d] (%d) terminated by signal %d\n", job->jid, pid, sig);
-                deletejob(jobs, pid); // TODO: we say below that all deletes only happen there, so should it not be deleted here?
-            } else {
-                //TODO: update table to be what?
+                deletejob(jobs, pid);
             }
         } else if (WIFEXITED(status)) {
             // returns true if the child terminated normally, via a call to exit or a return

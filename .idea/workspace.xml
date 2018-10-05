@@ -42,13 +42,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="c" value="8550" />
+          <entry key="c" value="8775" />
           <entry key="txt" value="81" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="8550" />
+          <entry key="ObjectiveC" value="8775" />
           <entry key="PLAIN_TEXT" value="81" />
         </counts>
       </usages-collector>
@@ -59,8 +59,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="321" column="26" selection-start-line="321" selection-start-column="26" selection-end-line="321" selection-end-column="26" />
+            <state relative-caret-position="174">
+              <caret line="420" column="57" selection-start-line="420" selection-start-column="57" selection-end-line="420" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -209,7 +209,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="35144000" />
+      <workItem from="1537893734233" duration="36228000" />
     </task>
     <task id="LOCAL-00001" summary="asldkfj">
       <created>1538666482449</created>
@@ -222,7 +222,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35144000" />
+    <option name="totallyTimeSpent" value="36228000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -304,8 +304,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tsh.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="321" column="26" selection-start-line="321" selection-start-column="26" selection-end-line="321" selection-end-column="26" />
+        <state relative-caret-position="174">
+          <caret line="420" column="57" selection-start-line="420" selection-start-column="57" selection-end-line="420" selection-end-column="57" />
         </state>
       </provider>
     </entry>
