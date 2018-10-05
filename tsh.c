@@ -366,7 +366,7 @@ int isInt(char *input) {
     int length = strlen (input);
     for (int i = 0; i < length; i++) {
         if (!isdigit(input[i])) {
-            printf("%s: argument must be a PID or %%jobid\n", argv[0]);
+            printf("%s: argument must be a PID or %%jobid\n", input);
             return 0;
         }
     }
@@ -411,8 +411,8 @@ void sigchld_handler(int sig)
             // got signal from sigtstp handler
 
             //update table - change state to stopped.
-            printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, WSTOPSIG(status));
             struct job_t *job = getjobpid(jobs, pid);
+            printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, WSTOPSIG(status));
             job->state = ST;
         } else if (WIFSIGNALED(status)) {
             // set sig to equal the number of the signal that caused the child process to terminate
