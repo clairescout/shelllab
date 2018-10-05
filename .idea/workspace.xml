@@ -10,7 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ebe60db6-66a7-4317-87d6-76d97067b7b8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/tsh" beforeDir="false" afterPath="$PROJECT_DIR$/tsh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tsh.c" beforeDir="false" afterPath="$PROJECT_DIR$/tsh.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -61,7 +60,7 @@
         <entry file="file://$PROJECT_DIR$/tsh.c">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="264">
-              <caret line="371" column="12" selection-start-line="371" selection-start-column="12" selection-end-line="371" selection-end-column="12" />
+              <caret line="318" column="46" lean-forward="true" selection-start-line="318" selection-start-column="46" selection-end-line="318" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -210,7 +209,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1537893732549</updated>
-      <workItem from="1537893734233" duration="34881000" />
+      <workItem from="1537893734233" duration="34956000" />
     </task>
     <task id="LOCAL-00001" summary="asldkfj">
       <created>1538666482449</created>
@@ -223,7 +222,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="34881000" />
+    <option name="totallyTimeSpent" value="34956000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -306,7 +305,7 @@
     <entry file="file://$PROJECT_DIR$/tsh.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="264">
-          <caret line="371" column="12" selection-start-line="371" selection-start-column="12" selection-end-line="371" selection-end-column="12" />
+          <caret line="318" column="46" lean-forward="true" selection-start-line="318" selection-start-column="46" selection-end-line="318" selection-end-column="46" />
         </state>
       </provider>
     </entry>
