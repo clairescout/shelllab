@@ -337,7 +337,7 @@ void do_bgfg(char **argv)
             // fprintf(stderr, "%s", argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             if (!job) {
-                printf("(%s): No such job\n", argv[1]);
+                printf("%s: No such job\n", argv[1]);
                 return;
             }
             if (strcmp(argv[0], "bg") == 0) {
