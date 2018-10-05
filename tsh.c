@@ -104,7 +104,6 @@ int main(int argc, char **argv)
     char c;
     char cmdline[MAXLINE];
     int emit_prompt = 1; /* emit prompt (default) */
-    // fprintf(stderr, "%s", "in main\n");
 
     /* Redirect stderr to stdout (so that driver will get all output
      * on the pipe connected to stdout) */
@@ -142,7 +141,6 @@ int main(int argc, char **argv)
 
     /* Execute the shell's read/eval loop */
     while (1) {
-        // fprintf(stderr, "%s", "in the while\n");
 
 	/* Read command line */
 	if (emit_prompt) {
@@ -153,14 +151,11 @@ int main(int argc, char **argv)
 	    app_error("fgets error");
 	if (feof(stdin)) { /* End of file (ctrl-d) */
 	    fflush(stdout);
-        // fprintf(stderr, "%s", "end of file\n");
 	    exit(0);
 	}
 
 	/* Evaluate the command line */
-	// fprintf(stderr, "%s", "about to eval\n");
 	eval(cmdline);
-	// fprintf(stderr, "%s", "just did eval\n");
 	fflush(stdout);
 	fflush(stdout);
     } 
@@ -181,7 +176,6 @@ int main(int argc, char **argv)
 */
 void eval(char *cmdline)
 {
-    // fprintf(stderr, "%s", "in eval\n");
     sigset_t sigset;
     char *argv[MAXARGS];
     char buf[MAXLINE];
@@ -202,7 +196,6 @@ void eval(char *cmdline)
         pid = fork();
 
         if ( pid == 0 ) {
-           //  printf("in child\n");
             sigprocmask(SIG_UNBLOCK, &sigset, NULL);
 
             // put child in a new process group with group ID = child’s PID to ensure only the shell is in the fg process group.
@@ -214,16 +207,12 @@ void eval(char *cmdline)
                 exit(0);
             }
         } else {
-            // printf("in parent\n");
             sigprocmask(SIG_BLOCK, &sigset, NULL);
             if ( !bg ) {
-                // printf("in if not bg\n");
                 addjob(jobs, pid, FG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 waitfg(pid);
-                // printf("finished in if not bg\n");
             } else {
-                // printf("in is bg\n");
                 addjob(jobs, pid, BG, cmdline);
                 sigprocmask(SIG_UNBLOCK, &sigset, NULL);
                 struct job_t *job = getjobpid(jobs, pid);
@@ -232,7 +221,6 @@ void eval(char *cmdline)
 
         }
     }
-    // printf("returning\n");
     return;
 }
 
@@ -299,8 +287,6 @@ int parseline(const char *cmdline, char **argv)
  */
 int builtin_cmd(char **argv)
 {
-    //fprintf(stderr, "%s %s\n", "argv: ", argv[0]);
-    //printf("argv: %s\n", argv[0]);
 
     if( strcmp("quit", argv[0]) == 0) {
         exit(0);
@@ -308,7 +294,6 @@ int builtin_cmd(char **argv)
         listjobs(jobs);
         return 1;
     } else if( strcmp("bg", argv[0]) == 0 || strcmp("fg", argv[0]) == 0) {
-        //fprintf(stderr, "%s", "dobgfg\n");
         do_bgfg(argv);
         return 1;
     }
@@ -320,22 +305,19 @@ int builtin_cmd(char **argv)
  */
 void do_bgfg(char **argv) 
 {
-    //fprintf(stderr, "%s", "in bgfg\n");
     // first check if there is even another arg that follows bg/fg.
     if (argv[1]) {
-        //fprintf(stderr, "%s", "in bgfg if statement\n");
         struct job_t *job;
-        // printf("argv[1][0] %c\n",argv[1][0]);
         if(argv[1][0] == '%'){
-            //fprintf(stderr, "%s", "in if %\n");
             // get the job based on jpid
             argv[1]++;
+            fprintf(stderr, "%s\n", argv[1]);
             if (!isInt(argv[1])) {
                 printf("%s: argument must be a PID or %%jobid\n", argv[0]); // TODO: take out repeated code
                 return;
             }
-            // fprintf(stderr, "%s", argv[1]++);
-            job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
+            job = getjobjid(jobs, atoi(argv[1]++));
+            fprintf(stderr, "%s\n", argv[1]);
             if (!job) {
                 printf("%s: No such job\n", argv[1]);
                 return;
@@ -362,10 +344,8 @@ void do_bgfg(char **argv)
         kill(-pid, SIGCONT);
         // update table to show correct state
         if (strcmp(argv[0], "bg") == 0) {
-            //fprintf(stderr, "%s", "set state to bg\n");
             job->state = BG;
         } else {
-            //fprintf(stderr, "%s", "set state to fg\n");
             job->state = FG;
             waitfg(pid);
         }
@@ -386,6 +366,11 @@ int isInt(char *input) {
         }
     }
     return 1;
+}
+
+int isValid(char *input, char *process) {
+    return 1;
+
 }
 
 /* 
