@@ -3,11 +3,6 @@
  * 
  * Claire Gammon cgammon
  *
- * QUESTIONS
- * do i check for builtin commands before forking?? if not, how do i exit from child and parent?
- * what do i need to mask in sigchld handler?
- * why does my sigint/sigtstp handler never stop??
- * why after doing ./myspin 2 & and .myspin 3 &  then jobs can i not call another command?
  */
 #include <stdio.h>
 #include <stdlib.h>
