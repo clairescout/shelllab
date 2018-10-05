@@ -203,7 +203,7 @@ void eval(char *cmdline)
 
 
             if (execve(argv[0], argv, environ) < 0) {
-                printf("%s: Command not found \n", argv[0]);
+                printf("%s: Command not found\n", argv[0]);
                 exit(0);
             }
         } else {
@@ -319,7 +319,7 @@ void do_bgfg(char **argv)
             job = getjobjid(jobs, atoi(argv[1]));
             // fprintf(stderr, "%s\n", argv[1]);
             if (!job) {
-                printf("%s: No such job\n", argv[1]);
+                printf("%%%s: No such job\n", argv[1]);
                 return;
             }
             if (strcmp(argv[0], "bg") == 0) {
@@ -350,7 +350,7 @@ void do_bgfg(char **argv)
             waitfg(pid);
         }
     } else {
-        printf("%s command requires PID or jobid argument\n", argv[0]);
+        printf("%s command requires PID or %%jobid argument\n", argv[0]);
     }
     return;
 }
