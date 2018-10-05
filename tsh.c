@@ -486,7 +486,7 @@ void sigtstp_handler(int sig)
     if (pid > 0) {
         struct job_t *job = getjobpid(jobs, pid);
         kill(-pid, SIGTSTP);
-        printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, sig);
+        // printf("Job [%d] (%d) stopped by signal %d\n", job->jid, pid, sig);
     } else {
         printf("There is no fg process\n");
     }
