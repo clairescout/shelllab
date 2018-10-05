@@ -210,7 +210,7 @@ void eval(char *cmdline)
 
 
             if (execve(argv[0], argv, environ) < 0) {
-                printf("%s: Command not found. \n", argv[0]);
+                printf("%s: Command not found \n", argv[0]);
                 exit(0);
             }
         } else {
@@ -331,13 +331,13 @@ void do_bgfg(char **argv)
             // get the job based on jpid
             argv[1]++;
             if (!isInt(argv[1])) {
-                printf("%s: argument must be a PID or jobid\n", argv[0]); // TODO: take out repeated code
+                printf("%s: argument must be a PID or %%jobid\n", argv[0]); // TODO: take out repeated code
                 return;
             }
             // fprintf(stderr, "%s", argv[1]++);
             job = getjobjid(jobs, atoi(argv[1]++)); //TODO: verify this.  TODO: error checking ie if it's not a pid/jid. check if it doesn't exist in the table
             if (!job) {
-                printf("(%d): No such job\n", atoi(argv[1]));
+                printf("(%s): No such job\n", argv[1]);
                 return;
             }
             if (strcmp(argv[0], "bg") == 0) {
@@ -346,7 +346,7 @@ void do_bgfg(char **argv)
 
         } else {
             if(!isInt(argv[1])) {
-                printf("%s: argument must be a PID or jobid\n", argv[0]);
+                printf("%s: argument must be a PID or %%jobid\n", argv[0]);
                 return;
             }
             job = getjobpid(jobs, atoi(argv[1]));
