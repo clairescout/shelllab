@@ -311,13 +311,13 @@ void do_bgfg(char **argv)
         if(argv[1][0] == '%'){
             // get the job based on jpid
             argv[1]++;
-            fprintf(stderr, "%s\n", argv[1]);
+            //fprintf(stderr, "%s\n", argv[1]);
             if (!isInt(argv[1])) {
                 printf("%s: argument must be a PID or %%jobid\n", argv[0]); // TODO: take out repeated code
                 return;
             }
             job = getjobjid(jobs, atoi(argv[1]));
-            fprintf(stderr, "%s\n", argv[1]);
+            // fprintf(stderr, "%s\n", argv[1]);
             if (!job) {
                 printf("%s: No such job\n", argv[1]);
                 return;
